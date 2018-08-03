@@ -1,0 +1,17 @@
+{
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
+    "rules": {
+      "ordered-imports": false,
+      "object-literal-sort-keys": false,
+      "interface-name": false,
+      "jsx-no-lambda": false,
+      "no-empty-interface": false
+    },
+    "linterOptions": {
+  
+      "exclude": [
+        "scripts/**/*.js",
+        "node_modules/**/*.ts"
+      ]
+    }
+  }

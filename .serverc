@@ -1,0 +1,8 @@
+{
+  "host": "0.0.0.0",
+  "port": 4000,
+  "compress": true,
+  "stats": { "colors": true, "chunks": false },
+  "inline": false,
+  "content": "/dist"
+}

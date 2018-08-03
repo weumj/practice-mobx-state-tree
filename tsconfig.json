@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "strict": true,
+      "noImplicitThis": true,
+      "strictNullChecks": true,
+      "noImplicitAny": true,
+      "removeComments": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "declaration": false,
+      "jsx": "react",
+      "lib": [
+        "es6",
+        "es7",
+        "dom"
+      ],
+      "outDir": "./public/js"
+    },
+    "include": [
+      "./src/**/*"
+    ],
+    "exclude": [
+      "static",
+      "dist",
+      "build",
+      "public"
+    ]
+  }
