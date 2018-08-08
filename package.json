@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-serve --open --mode development",
-    "test": "jest",
+    "test": "jest --env=jsdom",
     "precommit": "lint-staged",
     "commitmsg": "node ./scripts/commit-msg.js"
   },

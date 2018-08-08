@@ -12,4 +12,5 @@ module.exports = {
   },
   testMatch: ["**/*.(spec|test).+(ts|tsx|jsx|js)"],
   transformIgnorePatterns: [],
+  testURL: "http://0.0.0.0/",
 };
