@@ -10,6 +10,7 @@
     "build": "webpack --mode production",
     "start": "webpack-serve --open --mode development",
     "test": "jest --env=jsdom",
+    "test:watch": "npm run test -- --watch",
     "precommit": "lint-staged",
     "commitmsg": "node ./scripts/commit-msg.js"
   },
