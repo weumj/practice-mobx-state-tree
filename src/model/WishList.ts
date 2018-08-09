@@ -29,6 +29,11 @@ export const WishList = types
     add(item: IWishListItem) {
       self.items.push(item);
     },
+  }))
+  .views(self => ({
+    get totalPrice() {
+      return self.items.reduce((sum, item) => sum + item.price, 0);
+    },
   }));
 
 type WishListType = typeof WishList.Type;
