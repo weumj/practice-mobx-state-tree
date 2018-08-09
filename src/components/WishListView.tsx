@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 
 import WishListItemView from "./WishListItemView";
 import { IWishList } from "../models/WishList";
+import WishListItemEntry from "./WishListItemEntry";
 
 export interface Props {
   wishList: IWishList;
@@ -19,7 +20,7 @@ const WishListView = ({ wishList }: Props) => (
         <WishListItemView key={keys[i]} item={item} />
       ))}
     </ul>
-    Total: {wishList.totalPrice} €
+    Total: {wishList.totalPrice} €<WishListItemEntry wishList={wishList} />
   </div>
 );
 
