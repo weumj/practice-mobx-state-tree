@@ -1,15 +1,24 @@
 import React, { Component } from "react";
+import WishListView from "./components/WishListView";
+import { IWishList } from "./models/WishList";
 
-class App extends Component {
+export interface Props {
+  wishList: IWishList;
+}
+
+class App extends Component<Props> {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
+          <img
+            src="https://raw.githubusercontent.com/mweststrate/mst-course/lesson5/src/assets/santa-claus.png"
+            className="App-logo"
+            alt="logo"
+          />
+          <h1 className="App-title">WishList</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <WishListView wishList={this.props.wishList} />
       </div>
     );
   }
