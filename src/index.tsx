@@ -5,7 +5,7 @@ import App from "./App";
 import "./assets/index.css";
 
 import { WishList } from "./models/WishList";
-import { onSnapshot } from "mobx-state-tree";
+import { getSnapshot } from "mobx-state-tree";
 
 const _STORAGE_ID_ = "wishlistapp";
 
@@ -36,13 +36,31 @@ if (localStorage.getItem(_STORAGE_ID_)) {
   };
 }
 
-const wishList = WishList.create(initState);
+let wishList = WishList.create(initState);
 
-onSnapshot(wishList, snapshot => {
-  localStorage.setItem(_STORAGE_ID_, JSON.stringify(snapshot));
-});
+// onSnapshot(wishList, snapshot => {
+//   localStorage.setItem(_STORAGE_ID_, JSON.stringify(snapshot));
+// });
 
-ReactDOM.render(<App wishList={wishList} />, document.getElementById("app"));
+const renderApp = () => {
+  ReactDOM.render(<App wishList={wishList} />, document.getElementById("app"));
+};
+
+renderApp();
+
+if (module.hot) {
+  module.hot.accept(["./components/App"], () => {
+    renderApp();
+  });
+
+  module.hot.accept(["./models/WishList"], () => {
+    const snapshot = getSnapshot(wishList);
+
+    wishList = WishList.create(snapshot);
+
+    renderApp();
+  });
+}
 
 // setInterval(() => {
 //   wishList.items[0].changePrice(wishList.items[0].price + 1);
