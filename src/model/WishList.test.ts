@@ -1,4 +1,7 @@
+import { getSnapshot, onSnapshot, onPatch } from "mobx-state-tree";
 import { WishList, WishListItem } from "./WishList";
+import { IStateTreeNode } from "mobx-state-tree/dist/internal";
+import { IJsonPatch } from "mobx-state-tree/dist/core/json-patch";
 
 it("can create a instance of a model", () => {
   const item = WishListItem.create({
@@ -27,8 +30,31 @@ it("can create a wishlist", () => {
   expect(list.items[0].price).toBe(28.73);
 });
 
+it("can add new items - 2", () => {
+  const list = WishList.create();
+  const patches: IJsonPatch[] = [];
+  onPatch(list, patch => {
+    patches.push(patch);
+  });
+
+  list.add(
+    WishListItem.create({
+      name: "Chesterton",
+      price: 10,
+    }),
+  );
+
+  list.items[0].changeName("Book of G.K. Chesterton");
+
+  expect(patches).toMatchSnapshot();
+});
+
 it("can add new items", () => {
   const list = WishList.create();
+  const states: any[] = [];
+  onSnapshot(list, snapshot => {
+    states.push(snapshot);
+  });
 
   list.add(
     WishListItem.create({
@@ -42,4 +68,7 @@ it("can add new items", () => {
 
   list.items[0].changeName("Book of G.K. Chesterton");
   expect(list.items[0].name).toBe("Book of G.K. Chesterton");
+
+  expect(getSnapshot(list)).toMatchSnapshot();
+  expect(states).toMatchSnapshot();
 });
