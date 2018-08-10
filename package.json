@@ -25,6 +25,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "json-server": "^0.14.0",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.3",
     "mobx-state-tree": "^3.0.2",
