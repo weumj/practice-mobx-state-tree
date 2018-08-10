@@ -43,14 +43,23 @@ export const Group = types
   .model({
     users: types.map(User),
   })
-  .actions(self => ({
-    load: flow(function* load() {
-      const data = yield (yield window.fetch(
-        `http://localhost:3001/users`,
-      )).json();
-      applySnapshot(self.users, data);
-    }),
-    drawLots() {
+  .actions(self => {
+    let controller: AbortController;
+
+    const load = flow(function* load() {
+      controller = new AbortController();
+      try {
+        const data = yield (yield window.fetch(`http://localhost:3001/users`, {
+          signal: controller && controller.signal,
+        })).json();
+        applySnapshot(self.users, data);
+        console.log("success");
+      } catch (e) {
+        console.log("aborted", e.name);
+      }
+    });
+
+    const drawLots = () => {
       const allUsers: IUser[] = [...self.users.values()];
 
       if (allUsers.length <= 1) {
@@ -77,13 +86,22 @@ export const Group = types
           }
         }
       });
-    },
-  }))
-  .actions(self => ({
-    afterCreate() {
-      self.load();
-    },
-  }));
+    };
 
+    return {
+      afterCreate() {
+        load();
+      },
+      reload() {
+        if (controller) controller.abort();
+        load();
+      },
+      beforeDestroy() {
+        if (controller) controller.abort();
+      },
+      load,
+      drawLots,
+    };
+  });
 type GroupType = typeof Group.Type;
 export interface IGroup extends GroupType {}

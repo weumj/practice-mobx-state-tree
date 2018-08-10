@@ -34,6 +34,7 @@ class App extends Component<Props, State> {
           />
           <h1 className="App-title">WishList</h1>
         </header>
+        <button onClick={group.reload}>Reload</button>
         <select onChange={this.onSelectUser}>
           <option>- Select user -</option>
           {Array.from(group.users.values()).map(user => (
