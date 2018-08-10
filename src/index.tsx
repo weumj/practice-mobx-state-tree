@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { getSnapshot } from "mobx-state-tree";
+import { getSnapshot, addMiddleware } from "mobx-state-tree";
 
 import App from "./App";
 
@@ -49,6 +49,11 @@ if (localStorage.getItem(_STORAGE_ID_)) {
 }
 
 let group = Group.create(initState as any);
+
+addMiddleware(group, (call, next) => {
+  console.log(`[${call.type}] ${call.name}`);
+  next(call);
+});
 
 // onSnapshot(wishList, snapshot => {
 //   localStorage.setItem(_STORAGE_ID_, JSON.stringify(snapshot));
