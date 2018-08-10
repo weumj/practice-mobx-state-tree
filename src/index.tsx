@@ -11,33 +11,7 @@ import { Group } from "./models/Group";
 const _STORAGE_ID_ = "wishlistapp";
 
 let initState = {
-  users: {
-    a342: {
-      id: "a342",
-      name: "Homer",
-      gender: "m",
-    },
-    "5fc2": {
-      id: "5fc2",
-      name: "Marge",
-      gender: "f",
-    },
-    "663b": {
-      id: "663b",
-      name: "Bart",
-      gender: "m",
-    },
-    "65aa": {
-      id: "65aa",
-      name: "Maggie",
-      gender: "f",
-    },
-    ba32: {
-      id: "ba32",
-      name: "Lisa",
-      gender: "f",
-    },
-  },
+  users: {},
 };
 
 if (localStorage.getItem(_STORAGE_ID_)) {
@@ -48,7 +22,7 @@ if (localStorage.getItem(_STORAGE_ID_)) {
   }
 }
 
-let group = Group.create(initState as any);
+let group = ((window as any).group = Group.create(initState as any));
 
 addMiddleware(group, (call, next) => {
   console.log(`[${call.type}] ${call.name}`);
@@ -73,7 +47,7 @@ if (module.hot) {
   module.hot.accept(["./models/Group"], () => {
     const snapshot = getSnapshot(group);
 
-    group = Group.create(snapshot);
+    group = (window as any).group = Group.create(snapshot);
 
     renderApp();
   });

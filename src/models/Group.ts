@@ -1,4 +1,4 @@
-import { flow, getParent, IType, types } from "mobx-state-tree";
+import { applySnapshot, flow, getParent, IType, types } from "mobx-state-tree";
 import { IWishList, WishList } from "./WishList";
 
 interface UserModel {
@@ -44,6 +44,12 @@ export const Group = types
     users: types.map(User),
   })
   .actions(self => ({
+    load: flow(function* load() {
+      const data = yield (yield window.fetch(
+        `http://localhost:3001/users`,
+      )).json();
+      applySnapshot(self.users, data);
+    }),
     drawLots() {
       const allUsers: IUser[] = [...self.users.values()];
 
@@ -71,6 +77,11 @@ export const Group = types
           }
         }
       });
+    },
+  }))
+  .actions(self => ({
+    afterCreate() {
+      self.load();
     },
   }));
 
