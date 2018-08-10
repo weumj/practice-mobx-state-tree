@@ -1,13 +1,6 @@
-import {
-  applySnapshot,
-  flow,
-  getParent,
-  getSnapshot,
-  onSnapshot,
-  IType,
-  types,
-} from "mobx-state-tree";
+import { applySnapshot, flow, getParent, IType, types } from "mobx-state-tree";
 import { IWishList, WishList } from "./WishList";
+import { createStorable } from "./Storable";
 
 interface UserModel {
   id: string;
@@ -20,49 +13,35 @@ interface UserModel {
   save: () => Promise<any>;
 }
 
-const User: IType<any, any, UserModel> = types
-  .model("User", {
-    id: types.identifier,
-    name: types.string,
-    gender: types.enumeration("gender", ["m", "f"]),
-    wishList: types.optional(WishList, {}),
-    recipient: types.maybe(
-      types.reference(types.late<IType<any, any, UserModel>>(() => User)),
-    ),
-  })
-  .views(self => ({
-    get other() {
-      return getParent(self).get(self.recipient);
-    },
-  }))
-  .actions(self => {
-    const getSuggestions = flow(function* getSuggestions() {
-      const items = yield (yield window.fetch(
-        `http://localhost:3001/suggestions_${self.gender}`,
-      )).json();
-
-      self.wishList.items.push(...items);
-    });
-    const save = flow(function* save() {
-      try {
-        yield window.fetch(`http://localhost:3001/users/${self.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(getSnapshot(self)),
-        });
-      } catch (e) {
-        console.error("Uh oh, failed to save: ", e);
-      }
-    });
-
-    return {
-      getSuggestions,
-      save,
-      afterCreate() {
-        onSnapshot(self, save);
+const User: IType<any, any, UserModel> = types.compose(
+  types
+    .model({
+      id: types.identifier,
+      name: types.string,
+      gender: types.enumeration("gender", ["m", "f"]),
+      wishList: types.optional(WishList, {}),
+      recipient: types.maybe(types.reference(types.late(() => User))),
+    })
+    .views(self => ({
+      get other() {
+        return getParent(self).get(self.recipient);
       },
-    };
-  });
+    }))
+    .actions(self => {
+      const getSuggestions = flow(function* getSuggestions() {
+        const items = yield (yield window.fetch(
+          `http://localhost:3001/suggestions_${self.gender}`,
+        )).json();
+
+        self.wishList.items.push(...items);
+      });
+
+      return {
+        getSuggestions,
+      };
+    }),
+  createStorable("users", "id"),
+);
 
 type UserType = typeof User.Type;
 export interface IUser extends UserType {}
