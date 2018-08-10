@@ -1,6 +1,7 @@
 import React, { ChangeEvent, Component } from "react";
+import { observer } from "mobx-react";
 import WishListView from "./components/WishListView";
-import { IGroup } from "./models/Group";
+import { IGroup, IUser } from "./models/Group";
 
 export interface Props {
   group: IGroup;
@@ -41,13 +42,23 @@ class App extends Component<Props, State> {
             </option>
           ))}
         </select>
-        {selectedUser && <WishListView wishList={selectedUser.wishList} />}
-        {selectedUser && (
-          <button onClick={selectedUser.getSuggestions}>Suggestions</button>
-        )}
+        <button onClick={group.drawLots}>Draw lots</button>
+        {selectedUser && <User user={selectedUser} />}
       </div>
     );
   }
 }
+
+const User = observer(({ user }: { user: IUser }) => (
+  <div>
+    <WishListView wishList={user.wishList} />
+    <button onClick={user.getSuggestions}>Suggestions</button>
+    <hr />
+    <h2>{user.recipient ? user.recipient.name : ""}</h2>
+    {user.recipient && (
+      <WishListView wishList={user.recipient.wishList} readonly />
+    )}
+  </div>
+));
 
 export default App;

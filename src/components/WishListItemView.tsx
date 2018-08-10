@@ -8,6 +8,7 @@ import WishListItemEdit from "./WishListItemEdit";
 
 export interface Props {
   item: IWishListItem;
+  readonly?: boolean;
 }
 
 interface State {
@@ -26,16 +27,19 @@ export class WishListItemView extends Component<Props, State> {
   }
 
   private renderItem() {
-    const { item } = this.props;
+    const { item, readonly } = this.props;
+
     return (
       <li className="item">
         {item.image && <img src={item.image} />}
         <h3>{item.name}</h3>
         <span>{item.price} €</span>
-        <span>
-          <button onClick={this.onToggleEdit}>✏</button>
-          <button onClick={item.remove}>❎</button>
-        </span>
+        {!readonly && (
+          <span>
+            <button onClick={this.onToggleEdit}>✏</button>
+            <button onClick={item.remove}>❎</button>
+          </span>
+        )}
       </li>
     );
   }
